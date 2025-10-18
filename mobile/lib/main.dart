@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_colors.dart';
 import 'core/services/notification_service.dart';
+import 'core/services/navigation_service.dart';
 import 'data/providers/base_provider.dart';
 import 'features/splash/screens/splash_screen.dart';
 
@@ -54,10 +55,13 @@ class _MyAppState extends ConsumerState<MyApp> {
   Future<void> _initializeNotifications() async {
     // Attendre que le premier frame soit construit
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _notificationService.initialize(
-        appId: 'YOUR_ONESIGNAL_APP_ID', // À remplacer par votre App ID
-        context: NavigationService.navigatorKey.currentContext!,
-      );
+      final context = NavigationService.navigatorKey.currentContext;
+      if (context != null) {
+        await _notificationService.initialize(
+          appId: 'YOUR_ONESIGNAL_APP_ID', // À remplacer par votre App ID OneSignal
+          context: context,
+        );
+      }
     });
   }
 
@@ -166,6 +170,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       ),
       home: const SplashScreen(),
       routes: {
+        '/onboarding': (context) => const OnboardingScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
@@ -222,7 +227,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   }
 }
 
-// Import des écrans (à créer si manquants)
+// Import des écrans
+import 'features/onboarding/screens/onboarding_screen.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/home/screens/home_screen.dart';
@@ -232,6 +238,6 @@ import 'features/profile/screens/profile_screen.dart';
 import 'features/appointments/screens/appointments_screen.dart';
 import 'features/properties/screens/property_detail_screen.dart';
 import 'features/appointments/screens/appointment_detail_screen.dart';
-import 'features/payments/screens/payment_success_screen.dart';
+import 'features/properties/screens/payment_success_screen.dart';
 import 'features/maintenance/screens/maintenance_detail_screen.dart';
 import 'features/invoices/screens/invoice_detail_screen.dart';
