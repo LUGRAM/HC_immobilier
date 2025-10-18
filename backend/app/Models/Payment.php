@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 
 class Payment extends Model
 {
@@ -110,13 +110,13 @@ class Payment extends Model
 
     public function scopeThisMonth($query)
     {
-        return $query->whereMonth('completed_at', now()->month)
-                    ->whereYear('completed_at', now()->year);
+        return $query->whereRaw('MONTH(completed_at) = ?', [date('m')])
+                    ->whereRaw('YEAR(completed_at) = ?', [date('Y')]);
     }
 
     public function scopeThisYear($query)
     {
-        return $query->whereYear('completed_at', now()->year);
+        return $query->whereRaw('YEAR(completed_at) = ?', [date('Y')]);
     }
 
     // ============================================
@@ -227,6 +227,6 @@ class Payment extends Model
      */
     public static function generateTransactionId(): string
     {
-        return 'TXN-' . now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
+        return 'TXN-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
     }
 }

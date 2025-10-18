@@ -1,67 +1,102 @@
-import '../../core/services/api_service.dart';
 import '../../core/constants/api_endpoints.dart';
+import '../../core/services/api_service.dart';
 import '../models/appointment_model.dart';
-import '../models/lease_model.dart';
 
 class AppointmentRepository {
   final ApiService _apiService;
 
   AppointmentRepository(this._apiService);
 
+  /// Créer un rendez-vous
   Future<Map<String, dynamic>> createAppointment({
     required int propertyId,
-    required DateTime scheduledAt,
-    required String phoneNumber,
-    String? notes,
+    required DateTime date,
+    required String time,
   }) async {
-    final response = await _apiService.post(
-      ApiEndpoints.appointments,
-      data: {
-        'property_id': propertyId,
-        'scheduled_at': scheduledAt.toIso8601String(),
-        'phone_number': phoneNumber,
-        if (notes != null) 'notes': notes,
-      },
-    );
-
-    return response.data['data'];
+    try {
+      final response = await _apiService.post(
+        ApiEndpoints.createAppointment,
+        data: {
+          'property_id': propertyId,
+          'date': date.toIso8601String().split('T')[0], // YYYY-MM-DD
+          'time': time,
+        },
+      );
+      return response.data['data'];
+    } catch (e) {
+      throw Exception('Erreur lors de la création du rendez-vous: $e');
+    }
   }
 
-  Future<List<AppointmentModel>> getAppointments({
+  /// Obtenir les créneaux horaires disponibles pour une date
+  Future<List<Map<String, dynamic>>> getAvailableTimeSlots(DateTime date) async {
+    try {
+      final response = await _apiService.get(
+        ApiEndpoints.availableTimeSlots,
+        queryParameters: {
+          'date': date.toIso8601String().split('T')[0],
+        },
+      );
+      return List<Map<String, dynamic>>.from(response.data['data']);
+    } catch (e) {
+      throw Exception('Erreur lors du chargement des créneaux: $e');
+    }
+  }
+
+  /// Obtenir tous les rendez-vous de l'utilisateur
+  Future<List<AppointmentModel>> getMyAppointments({
     String? status,
-    bool? upcoming,
+    int page = 1,
   }) async {
-    final response = await _apiService.get(
-      ApiEndpoints.appointments,
-      queryParameters: {
+    try {
+      final queryParams = {
+        'page': page,
         if (status != null) 'status': status,
-        if (upcoming != null) 'upcoming': upcoming,
-      },
-    );
+      };
 
-    final data = response.data['data'];
-    return (data as List)
-        .map((json) => AppointmentModel.fromJson(json))
-        .toList();
+      final response = await _apiService.get(
+        ApiEndpoints.myAppointments,
+        queryParameters: queryParams,
+      );
+
+      final List<dynamic> data = response.data['data'];
+      return data.map((json) => AppointmentModel.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Erreur lors du chargement des rendez-vous: $e');
+    }
   }
 
+  /// Obtenir les détails d'un rendez-vous
   Future<AppointmentModel> getAppointmentDetail(int id) async {
-    final response = await _apiService.get(
-      ApiEndpoints.appointmentDetail(id),
-    );
-
-    return AppointmentModel.fromJson(response.data['data']);
+    try {
+      final response = await _apiService.get(
+        ApiEndpoints.getAppointmentDetailUrl(id),
+      );
+      return AppointmentModel.fromJson(response.data['data']);
+    } catch (e) {
+      throw Exception('Erreur lors du chargement du rendez-vous: $e');
+    }
   }
 
+  /// Annuler un rendez-vous
   Future<void> cancelAppointment(int id) async {
-    await _apiService.put(ApiEndpoints.cancelAppointment(id));
+    try {
+      await _apiService.delete(
+        ApiEndpoints.getCancelAppointmentUrl(id),
+      );
+    } catch (e) {
+      throw Exception('Erreur lors de l\'annulation: $e');
+    }
   }
 
-  Future<LeaseModel> requestLease(int appointmentId) async {
-    final response = await _apiService.post(
-      ApiEndpoints.requestLease(appointmentId),
-    );
-
-    return LeaseModel.fromJson(response.data['data']);
+  /// Valider un rendez-vous (pour bailleur)
+  Future<void> validateAppointment(int id) async {
+    try {
+      await _apiService.put(
+        ApiEndpoints.getValidateAppointmentUrl(id),
+      );
+    } catch (e) {
+      throw Exception('Erreur lors de la validation: $e');
+    }
   }
 }

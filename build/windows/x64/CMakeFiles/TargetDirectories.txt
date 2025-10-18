@@ -1,0 +1,13 @@
+C:/Users/HP/Desktop/Rigel/build/windows/x64/CMakeFiles/INSTALL.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/CMakeFiles/ALL_BUILD.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/CMakeFiles/ZERO_CHECK.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/flutter/CMakeFiles/flutter_wrapper_plugin.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/flutter/CMakeFiles/flutter_wrapper_app.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/flutter/CMakeFiles/flutter_assemble.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/flutter/CMakeFiles/INSTALL.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/runner/CMakeFiles/hc.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/runner/CMakeFiles/INSTALL.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/runner/CMakeFiles/ALL_BUILD.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/plugins/connectivity_plus/CMakeFiles/connectivity_plus_plugin.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/plugins/connectivity_plus/CMakeFiles/INSTALL.dir
+C:/Users/HP/Desktop/Rigel/build/windows/x64/plugins/connectivity_plus/CMakeFiles/ALL_BUILD.dir
