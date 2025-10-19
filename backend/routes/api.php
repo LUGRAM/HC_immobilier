@@ -10,7 +10,8 @@ use App\Http\Controllers\Api\{
     InvoiceController,
     AppointmentController,
     MaintenanceRequestController,
-    DashboardController
+    DashboardController,
+    ExpenseController
 };
 
 /*
@@ -95,6 +96,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/maintenance/{id}', [MaintenanceRequestController::class, 'show']);
     Route::post('/maintenance/{id}/cancel', [MaintenanceRequestController::class, 'cancel']);
     Route::get('/maintenance/stats', [MaintenanceRequestController::class, 'stats']);
+    
+    // ========================================
+    // ========================================
+    Route::get('/expenses', [ExpenseController::class, 'index']);
+    Route::post('/expenses', [ExpenseController::class, 'store']);
+    Route::get('/expenses/{id}', [ExpenseController::class, 'show']);
+    Route::put('/expenses/{id}', [ExpenseController::class, 'update']);
+    Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy']);
+    Route::get('/expenses/stats/summary', [ExpenseController::class, 'summary']);
     
     // ========================================
     // ROUTES LANDLORD (Bailleurs)
